@@ -1,90 +1,89 @@
 # Important
 This project only accepts **bug issues** and **pull requests**, and does not provide assistance in use  
-此项目仅接受现有功能的BUG反馈和Pull requests，不提供使用上的帮助  
 
 # Luck System
 
 LucaSystem ~~engine galgame **Emulator**~~  
-LucaSystem 引擎解析工具
+LucaSystem Engine Parsing Tool
 
-## LucaSystem解析完成进度
+## LucaSystem parsing completion progress
 
-### Luca Pak 封包文件
+### Luca Pak; Packaging Files
 
-- 导出完成
-- 导入完成
-    - 仅支持替换文件数据
+- Export completed
+- Import completed
+    - Only supports replacing file data
 
-### Luca CZImage 图片文件
+### Luca CZImage; Image Files
 
 #### CZ0
 
-- 导出完成 32位
-- 导入完成 32位
+- Export completed 32-bit
+- Import completed 32-bit
 
 #### CZ1
 
-- 导出完成 8位
-- 导入完成 8位
+- Export completed 8-bit
+- Import completed 8-bit
 
 #### CZ2
 
-- 遇到问题，未解决
+- Encountered issues, unresolved
 
 #### CZ3
 
-- 导出完成 32位 24位
-- 导入完成 32位 24位
+- Export completed 32-bit 24-bit
+- Import completed 32-bit 24-bit
 
 #### CZ4
 
-- LucaSystemTools中完成
+- Completed within LucaSystemTools
 
 #### CZ5
 
-- 未遇到
+- Not encountered
 
-### Luca Script 脚本文件
+### Luca Script; Script Files
 
-- 导出完成
-- 导入完成
-- 简单的模拟执行
+- Export completed
+- Import completed
+- Simple emulation execution
 
-#### 笔记
+#### Notes
 
-根据时间，可以LucaSystem的脚本类型分为三个版本，目前仅研究V3版本，即最新版本。LucaSystemTools支持V2版本的脚本解析
+Based on time, LucaSystem's script types can be divided into three versions. Currently, only version V3, the latest version, is being studied. LucaSystemTools support script parsing for V2 versions.
 
-| 类型  |  长度 | 名称 | 说明                                 | 
+| Type  |  Length | Name | Description                                 | 
 |-----|-------|-----|------------------------------------|
-| uint16 |  2  | len | 代码长度                               |
-| uint8 |  1  | opcode | 指令索引                               |
-| uint8 |  1  | flag | 一个标志，值0~3                          |
-| []uint16 |  2 * n  | data0 | 未知参数，其中n=flag(flag<3),n=2(flag==3) |
-| params |  len -4 -2*n  | params | 参数                                 |
-| uint8 |  k  | align | 补齐位，其中k=len%2                      |
+| uint16 |  2  | len | 	Code length                               |
+| uint8 |  1  | opcode | Instruction index                               |
+| uint8 |  1  | flag | A flag, values 0~3                        |
+| []uint16 |  2 * n  | data0 | Unknown parameters, where n=flag (flag<3), n=2 (flag=3) |
+| params |  len -4 -2*n  | params | Parameters                                 |
+| uint8 |  k  | align | Alignment padding, where k=len%2                     |
 
-### Luca Font 字体文件
+### Luca Font; Font Files
 
-- 解析完成
-- 能够简单使用，生成指定文本的图像
-- 导出完成
-- 导入、制作完成
+- Parsing completed
+- Can be used easily to generate images of specified text
+- Export completed
+- Import and creation completed
 
-#### info文件
+#### info files
 
-- 导出完成
-- 导入完成
+- Export completed
+- Import completed
 
-### Luca OggPak 音频封包
+### Luca OggPak; Audio Packaging
 
-- 导出完成
+- Export completed
 
-## 目前支持的游戏
+## Currently supported games
 
-1. LB_EN:《Little Busters! English Edition》 Steam *优先
+1. LB_EN:《Little Busters! English Edition》 Steam *Priority
 2. SP:《Summer Pockets》 Nintendo Switch
 
-## 目前支持的指令
+## Currently supported commands
 
 - MESSAGE (LB_EN、SP)
 - SELECT (LB_EN、SP)
@@ -103,16 +102,15 @@ LucaSystem 引擎解析工具
 - FARCALL
 - MOVE
 
-其余指令的数据均为未处理或者解析
+The data for the remaining commands is either unprocessed or not yet parsed.
 
-## 更新日志
+## Changelog
 
-### 未来
+### Future
 
-- 完善的log输出
-- 支持更多LucaSystem引擎的游戏资源解析
-- 通用化与易理解的控制台交互接口
-
+- Comprehensive log outputs
+- Support for parsing game resources of more LucaSystem engines
+- Generalized and easily understandable console interactive interface
 ### 6.26
 - 完全重构cmd使用方式
   - 暂不支持script脚本的cmd调用
@@ -246,8 +244,8 @@ LucaSystem 引擎解析工具
 - 第三方包的选择与测试
 - 支持LB_EN基本解析
 
-### 计划
+### Plan
 
-- 支持更多LucaSystem引擎的游戏脚本解析
-- 完善引擎函数
-- 引擎层交互的初步实现
+- Support script parsing for more games using the LucaSystem engine
+- Enhance engine functions
+- Initial implementation of engine-level interactions

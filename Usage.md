@@ -1,63 +1,63 @@
-## 使用help能获取详细指令信息
+## Using the "help" command provides detailed command information
 
 ## Example
 ```shell
-# 查看FONT.PAK文件列表
+# View the list of files in the FONT.PAK
 lucksystem pak \
   -s data/LB_EN/FONT.PAK \
   -L
 
-# 提取FONT.PAK中所有文件到temp中
+# Extract all files from FONT.PAK to the "temp" directory
 lucksystem pak extract \
   -i data/LB_EN/FONT.PAK \
   -o data/LB_EN/FONT.txt \
   --all data/LB_EN/temp
 
-# 提起FONT.PAK中第6个(index从零开始)个
+# Extract the 6th file (index starts from 0) from FONT.PAK
 lucksystem pak extract \
   -i data/LB_EN/FONT.PAK \
   -o data/LB_EN/5 \
   --index 5
 
-# 替换FONT.PAK中temp内对应文件
+# Replace the corresponding file inside FONT.PAK with the file from the "temp" directory
 lucksystem pak replace \
   -s data/LB_EN/FONT.PAK \
   -o data/LB_EN/FONT.out.PAK \
   -i data/LB_EN/temp
 
-# 替换FONT.PAK中文件名为info32的文件
+# Replace the file named "info32" in FONT.PAK
 lucksystem pak replace \
   -s data/LB_EN/FONT.PAK \
   -o data/LB_EN/FONT.out.PAK \
   -i data/LB_EN/temp/info32 \
   --name info32
 
-# 替换FONT.PAK中存在FONT.txt列表的文件
+# Replace the files in FONT.PAK that have a listing in FONT.txt
 lucksystem pak replace \
   -s data/LB_EN/FONT.PAK \
   -o data/LB_EN/FONT.out.PAK \
   -i data/LB_EN/FONT.txt \
   --list
 
-# 提取cz到png图片
+# Extract CZ files to PNG images
 lucksystem image export \
   -i data/LB_EN/FONT/明朝32 \
   -o data/LB_EN/0.png
 
-# 导入png图片到cz
+# Import PNG images into CZ files
 lucksystem image import \
   -s data/LB_EN/FONT/明朝32 \
   -i data/LB_EN/0.png \
   -o data/LB_EN/0.cz1
 
-# 提取32号"明朝"字体图片和字符集txt
+# Extract the image and character set txt for the 32nd "明朝" font
 lucksystem font extract \
   -s data/Other/Font/明朝32 \
   -S data/Other/Font/info32 \
   -o data/Other/Font/明朝32_f.png \
   -O data/Other/Font/info32_f.txt
 
-# 用ttf重绘32号"明朝"字体
+# Redraw the 32nd "明朝" font using a TTF (TrueType Font) file
 lucksystem font edit \
   -s data/LB_EN/FONT/明朝32 \
   -S data/LB_EN/FONT/info32 \
@@ -66,7 +66,7 @@ lucksystem font edit \
   -O data/Other/Font/info32 \
   -r
 
-# 将allchar.txt中字符追加到明朝32字体最后方
+# Append the characters from "allchar.txt" to the end of the 32nd "明朝" font
 lucksystem font edit \
   -s data/LB_EN/FONT/明朝32 \
   -S data/LB_EN/FONT/info32 \
@@ -76,7 +76,7 @@ lucksystem font edit \
   -c data/Other/Font/allchar.txt \
   -a
 
-# 将allchar.txt中字符替换到到明朝32字体第7106个字符处
+# Replace the characters from "allchar.txt" at the 7106th character position of the 32nd "明朝" font
 lucksystem font edit \
   -s data/LB_EN/FONT/明朝32 \
   -S data/LB_EN/FONT/info32 \
