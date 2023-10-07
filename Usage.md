@@ -3,6 +3,47 @@
 ## Example
 ```shell
 # View the list of files in the FONT.PAK
+## 使用此工具进行翻译工作时，请注意
+
+- 最好需要提取OPCODE，从可执行文件中获取。如无法提取，需要进行以下工作：
+  - 反编译脚本，得到全为uint16的脚本文件，找出其中可能包含字符串的操作（一般特别长，并且存在连续的、较大的值）
+  - 使用Plugin中的`opcode_dict`功能，映射为插件函数并尝试进行解析，解析出字符串并进行翻译
+  - 此时的字符串不能进行超长，且需要使用**全角空格**(半角字符串则使用半角空格)进行填充为原始长度，否则会导致导入后的脚本无法正常使用
+  - 如想进行任意字符串的修改，需要识别出[base](data/base)下插件文件中的跳转操作，如`IFN` `FARCALL` `JUMP`等操作，并使用`read_jump`准确的解析出跳转的类型、跳转值等
+- 如已经有完整的OPCODE:
+  - 反编译脚本，得到全为uint16的脚本文件，找出其中可能包含字符串的操作（一般特别长，并且存在连续的、较大的值）
+  - 使用Plugin进行尝试解析
+  - 此时的字符串不能进行超长，且需要使用**全角空格**(半角字符串则使用半角空格)进行填充为原始长度，否则会导致导入后的脚本无法正常使用
+  - 如想进行任意字符串的修改，需要解析[base](data/base)下插件文件中的跳转操作，如`IFN` `FARCALL` `JUMP`，并使用`read_jump`准确的解析出跳转的类型、跳转值等
+- 导入和导出必须使用同一份相同的原SCRIPT.PAK、OPCODE和插件，对插件的任何修改都需要重新进行反编译，才可以导入
+- 建议：编写额外的工具，从反编译后的脚本中提取需要翻译的文本，并在翻译完成过使用工具替换到反编译后的脚本中，然后再导入，防止游戏数值被意外的修改
+## 使用help能获取详细指令信息
+
+## Example
+```shell
+# 反编译SCRIPT.PAK
+lucksystem script decompile \
+  -s D:/Game/LOOPERS/files/SCRIPT.PAK \
+  -c UTF-8 \
+  -O data/LOOPERS.txt \
+  -p data/LOOPERS.py \
+  -o D:/Game/LOOPERS/files/Export
+
+# lucksystem script decompile -s D:/Game/LOOPERS/LOOPERS/files/src/SCRIPT.PAK -c UTF-8 -O data/LOOPERS.txt -p data/LOOPERS.py -o D:/Game/LOOPERS/LOOPERS/files/Export
+
+# 导入修改后的反编译脚本到SCRIPT.PAK
+lucksystem script import \
+  -s D:/Game/LOOPERS/files/SCRIPT.PAK \
+  -c UTF-8 \
+  -O data/LOOPERS.txt \
+  -p data/LOOPERS.py \
+  -i D:/Game/LOOPERS/files/Export \
+  -o D:/Game/LOOPERS/files/Import/SCRIPT.PAK
+
+# lucksystem script import -s D:/Game/LOOPERS/LOOPERS/files/src/SCRIPT.PAK -c UTF-8 -O data/LOOPERS.txt -p data/LOOPERS.py -i D:/Game/LOOPERS/LOOPERS/files/Export -o D:/Game/LOOPERS/LOOPERS/files/Import/SCRIPT.PAK
+
+
+# 查看FONT.PAK文件列表
 lucksystem pak \
   -s data/LB_EN/FONT.PAK \
   -L

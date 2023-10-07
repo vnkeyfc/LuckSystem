@@ -6,13 +6,14 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"lucksystem/charset"
-	"lucksystem/utils"
 	"os"
 	"path"
 	"path/filepath"
 	"strconv"
 	"strings"
+
+	"lucksystem/charset"
+	"lucksystem/utils"
 
 	"github.com/go-restruct/restruct"
 	"github.com/golang/glog"
@@ -194,6 +195,7 @@ func (p *Pak) Get(name string) (*Entry, error) {
 func (p *Pak) GetById(id int) (*Entry, error) {
 	return p.GetByIndex(id - int(p.IDStart))
 }
+
 func (p *Pak) GetByIndex(index int) (*Entry, error) {
 
 	if index < 0 || index >= int(p.FileCount) {
@@ -254,7 +256,7 @@ func (p *Pak) SetByIndex(index int, r io.Reader) error {
 	entry := p.Files[index]
 	newData, err := io.ReadAll(r)
 	if err != nil {
-		glog.V(8).Infoln("os.ReadFile", err)
+		glog.Warning("os.ReadFile", err)
 		return err
 	}
 	alignLength := entry.Length
@@ -262,8 +264,12 @@ func (p *Pak) SetByIndex(index int, r io.Reader) error {
 		alignLength = (alignLength/p.BlockSize + 1) * p.BlockSize
 	}
 
-	p.Rebuild = alignLength < uint32(len(newData)) // 无法装下新数据内容，需要重构
+	p.Rebuild = p.Rebuild || alignLength < uint32(len(newData)) // 无法装下新数据内容，需要重构
 
+	if uint32(len(newData)) != entry.Length {
+		glog.V(4).Infof("%s\nlength: %d -> length: %d\n",
+			entry.Name, entry.Length, uint32(len(newData)))
+	}
 	entry.Replace = true
 	entry.Data = newData
 	entry.Length = uint32(len(newData))

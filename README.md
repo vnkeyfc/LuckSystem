@@ -1,12 +1,17 @@
 # Important
 This project only accepts **bug issues** and **pull requests**, and does not provide assistance in use  
 
-# Luck System
+## LucaSystem parsing completion progress
+此项目仅接受现有功能的BUG反馈和Pull requests，不提供使用上的帮助
 
+# Luck System
 LucaSystem ~~engine galgame **Emulator**~~  
 LucaSystem Engine Parsing Tool
 
-## LucaSystem parsing completion progress
+## 使用方法：[Usage](Usage.md)
+## 插件手册：[Plugin](Plugin.md)
+
+## LucaSystem解析完成进度
 
 ### Luca Pak; Packaging Files
 
@@ -48,6 +53,12 @@ LucaSystem Engine Parsing Tool
 - Export completed
 - Import completed
 - Simple emulation execution
+- 导出完成
+- 导入完成
+- ~~简单的模拟执行~~
+- 支持插件扩展（gpython）
+  - 非标准的Python，语法类似Python3.4，缺少大量的内置库和一些特性，基本使用没有问题
+  - 插件手册 [Plugin](Plugin.md)
 
 #### Notes
 
@@ -78,14 +89,14 @@ Based on time, LucaSystem's script types can be divided into three versions. Cur
 
 - Export completed
 
-## Currently supported games
-
-1. LB_EN:《Little Busters! English Edition》 Steam *Priority
-2. SP:《Summer Pockets》 Nintendo Switch
+## 目前支持的游戏
+1. 《LOOPERS》 Steam
+2. LB_EN:《Little Busters! English Edition》 Steam
+3. SP:《Summer Pockets》 Nintendo Switch
 
 ## Currently supported commands
 
-- MESSAGE (LB_EN、SP)
+- MESSAGE (LB_EN、SP、LOOPERS)
 - SELECT (LB_EN、SP)
 - IMAGELOAD (LB_EN、SP)
 
@@ -100,13 +111,18 @@ Based on time, LucaSystem's script types can be divided into three versions. Cur
 - GOTO
 - JUMP
 - FARCALL
-- MOVE
+- GOSUB
 
 The data for the remaining commands is either unprocessed or not yet parsed.
 
 ## Changelog
 
-### Future
+### 2023.10.7
+- 支持LOOPERS导入和导出(已测试)
+- 支持Plugin扩展以支持任意游戏
+- 内置SummerPockets(未测试)和LOOPERS默认Plugin插件和OPCODE
+- 移除模拟器相关代码
+
 
 - Comprehensive log outputs
 - Support for parsing game resources of more LucaSystem engines
