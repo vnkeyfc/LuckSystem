@@ -4,11 +4,11 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"github.com/go-restruct/restruct"
 	"lucksystem/charset"
 	"lucksystem/game"
 	"lucksystem/game/enum"
 
+	"github.com/go-restruct/restruct"
 	"github.com/spf13/cobra"
 )
 
@@ -23,7 +23,7 @@ var scriptImportCmd = &cobra.Command{
 			PluginFile: ScriptPlugin,
 			OpcodeFile: ScriptOpcode,
 			Coding:     charset.Charset(Charset),
-			Mode:       enum.VMRunExport,
+			Mode:       enum.VMRunImport,
 		})
 		g.LoadScriptResources(ScriptSource)
 		g.ImportScript(ScriptImportDir)
