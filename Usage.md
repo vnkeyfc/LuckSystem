@@ -1,27 +1,27 @@
+
+
+## When using this tool for translation work, please take note of the following:
+
+- It's best to extract OPCODE from the executable file. If extraction is not possible, the following steps need to be taken:
+  - Decompiling the script to obtain a script file consisting entirely of uint16 values, identifying operations that likely contain strings (typically very long and with continuous, large values).
+  - Using the `opcode_dict` feature in the Plugin, mapping it to a plugin function and attempting to parse, extracting strings and translating them.
+  - At this point, strings cannot be overly long, and they should be padded with **full-width spaces** (for half-width strings, use half-width spaces) to match the original length; otherwise, it may cause issues with the script after importing.
+  - If you wish to modify any string arbitrarily, you need to identify the jump operations in the plugin files under [base](data/base), such as `IFN`, `FARCALL`, `JUMP`, and use `read_jump` to accurately parse the type and value of the jump.
+
+- If you already have a complete set of OPCODE:
+  - Decompile the script to obtain a script file consisting entirely of uint16 values, identifying operations that likely contain strings (typically very long and with continuous, large values).
+  - Attempt to parse using the Plugin.
+  - At this point, strings cannot be overly long, and they should be padded with **full-width spaces**(for half-width strings, use half-width spaces) to match the original length; otherwise, it may cause issues with the script after importing.
+If you wish to modify any string arbitrarily, you need to parse the jump operations in the plugin files under [base](data/base), such as `IFN`, `FARCALL`, `JUMP`, and use `read_jump` to accurately parse the type and value of the jump.
+Importing and exporting must use the same original SCRIPT.PAK, OPCODE, and plugins. Any modifications to the plugins require re-decompilation before importing is possible.
+
+Recommendation: Write additional tools to extract the text to be translated from the decompiled script, use the tools to replace the translated text in the decompiled script after translation, and then import it to prevent unintentional modifications to game values.
+
 ## Using the "help" command provides detailed command information
 
 ## Example
 ```shell
-# View the list of files in the FONT.PAK
-## 使用此工具进行翻译工作时，请注意
-
-- 最好需要提取OPCODE，从可执行文件中获取。如无法提取，需要进行以下工作：
-  - 反编译脚本，得到全为uint16的脚本文件，找出其中可能包含字符串的操作（一般特别长，并且存在连续的、较大的值）
-  - 使用Plugin中的`opcode_dict`功能，映射为插件函数并尝试进行解析，解析出字符串并进行翻译
-  - 此时的字符串不能进行超长，且需要使用**全角空格**(半角字符串则使用半角空格)进行填充为原始长度，否则会导致导入后的脚本无法正常使用
-  - 如想进行任意字符串的修改，需要识别出[base](data/base)下插件文件中的跳转操作，如`IFN` `FARCALL` `JUMP`等操作，并使用`read_jump`准确的解析出跳转的类型、跳转值等
-- 如已经有完整的OPCODE:
-  - 反编译脚本，得到全为uint16的脚本文件，找出其中可能包含字符串的操作（一般特别长，并且存在连续的、较大的值）
-  - 使用Plugin进行尝试解析
-  - 此时的字符串不能进行超长，且需要使用**全角空格**(半角字符串则使用半角空格)进行填充为原始长度，否则会导致导入后的脚本无法正常使用
-  - 如想进行任意字符串的修改，需要解析[base](data/base)下插件文件中的跳转操作，如`IFN` `FARCALL` `JUMP`，并使用`read_jump`准确的解析出跳转的类型、跳转值等
-- 导入和导出必须使用同一份相同的原SCRIPT.PAK、OPCODE和插件，对插件的任何修改都需要重新进行反编译，才可以导入
-- 建议：编写额外的工具，从反编译后的脚本中提取需要翻译的文本，并在翻译完成过使用工具替换到反编译后的脚本中，然后再导入，防止游戏数值被意外的修改
-## 使用help能获取详细指令信息
-
-## Example
-```shell
-# 反编译SCRIPT.PAK
+# Decompile SCRIPT.PAK
 lucksystem script decompile \
   -s D:/Game/LOOPERS/files/SCRIPT.PAK \
   -c UTF-8 \
@@ -31,7 +31,7 @@ lucksystem script decompile \
 
 # lucksystem script decompile -s D:/Game/LOOPERS/LOOPERS/files/src/SCRIPT.PAK -c UTF-8 -O data/LOOPERS.txt -p data/LOOPERS.py -o D:/Game/LOOPERS/LOOPERS/files/Export
 
-# 导入修改后的反编译脚本到SCRIPT.PAK
+# Import the modified decompiled script into SCRIPT.PAK
 lucksystem script import \
   -s D:/Game/LOOPERS/files/SCRIPT.PAK \
   -c UTF-8 \
@@ -43,7 +43,7 @@ lucksystem script import \
 # lucksystem script import -s D:/Game/LOOPERS/LOOPERS/files/src/SCRIPT.PAK -c UTF-8 -O data/LOOPERS.txt -p data/LOOPERS.py -i D:/Game/LOOPERS/LOOPERS/files/Export -o D:/Game/LOOPERS/LOOPERS/files/Import/SCRIPT.PAK
 
 
-# 查看FONT.PAK文件列表
+# View the list of files in the FONT.PAK
 lucksystem pak \
   -s data/LB_EN/FONT.PAK \
   -L

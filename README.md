@@ -1,17 +1,14 @@
 # Important
 This project only accepts **bug issues** and **pull requests**, and does not provide assistance in use  
 
-## LucaSystem parsing completion progress
-此项目仅接受现有功能的BUG反馈和Pull requests，不提供使用上的帮助
-
 # Luck System
 LucaSystem ~~engine galgame **Emulator**~~  
 LucaSystem Engine Parsing Tool
 
-## 使用方法：[Usage](Usage.md)
-## 插件手册：[Plugin](Plugin.md)
+## Usage Instructions: [Usage](Usage.md)
+## Plugin Manual: [Plugin](Plugin.md)
 
-## LucaSystem解析完成进度
+## LucaSystem Parsing Progress Completed
 
 ### Luca Pak; Packaging Files
 
@@ -46,19 +43,16 @@ LucaSystem Engine Parsing Tool
 
 #### CZ5
 
-- Not encountered
+- Not encountered (chưa gặp)
 
 ### Luca Script; Script Files
 
 - Export completed
 - Import completed
-- Simple emulation execution
-- 导出完成
-- 导入完成
-- ~~简单的模拟执行~~
-- 支持插件扩展（gpython）
-  - 非标准的Python，语法类似Python3.4，缺少大量的内置库和一些特性，基本使用没有问题
-  - 插件手册 [Plugin](Plugin.md)
+- ~~Simple emulation execution~~
+- Supports Plugin Extensions（gpython）
+  - Non-standard Python, syntax similar to Python 3.4, lacks many built-in libraries and some features, but basic usage is fine
+  - Plugin Manual [Plugin](Plugin.md)
 
 #### Notes
 
@@ -89,7 +83,7 @@ Based on time, LucaSystem's script types can be divided into three versions. Cur
 
 - Export completed
 
-## 目前支持的游戏
+## Supported Games at Present
 1. 《LOOPERS》 Steam
 2. LB_EN:《Little Busters! English Edition》 Steam
 3. SP:《Summer Pockets》 Nintendo Switch
@@ -118,15 +112,11 @@ The data for the remaining commands is either unprocessed or not yet parsed.
 ## Changelog
 
 ### 2023.10.7
-- 支持LOOPERS导入和导出(已测试)
-- 支持Plugin扩展以支持任意游戏
-- 内置SummerPockets(未测试)和LOOPERS默认Plugin插件和OPCODE
-- 移除模拟器相关代码
+- Supports LOOPERS import and export (tested)
+- Supports Plugin extension to accommodate any game
+- Built-in SummerPockets (untested) and LOOPERS default Plugin plugins and OPCODE
+- Removed emulator-related code
 
-
-- Comprehensive log outputs
-- Support for parsing game resources of more LucaSystem engines
-- Generalized and easily understandable console interactive interface
 ### 6.26
 - 完全重构cmd使用方式
   - 暂不支持script脚本的cmd调用
