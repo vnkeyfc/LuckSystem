@@ -21,7 +21,12 @@ Recommendation: Write additional tools to extract the text to be translated from
 
 ## Example
 ```shell
-# Decompile SCRIPT.PAK
+# 导出CZ2图片
+lucksystem  image export \
+  -i C:/Users/wetor/Desktop/Prototype/CZ2/32/明朝32 \
+  -o C:/Users/wetor/Desktop/Prototype/CZ2/32/明朝32.png
+
+# 反编译SCRIPT.PAK
 lucksystem script decompile \
   -s D:/Game/LOOPERS/files/SCRIPT.PAK \
   -c UTF-8 \

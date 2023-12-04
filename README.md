@@ -30,7 +30,8 @@ LucaSystem Engine Parsing Tool
 
 #### CZ2
 
-- Encountered issues, unresolved
+- Export completed 8-bit
+- Import completed 8-bit
 
 #### CZ3
 
@@ -110,6 +111,15 @@ Based on time, LucaSystem's script types can be divided into three versions. Cur
 The data for the remaining commands is either unprocessed or not yet parsed.
 
 ## Changelog
+
+### 2.2.1 (2023.12.4)
+- 支持[CartagraHD](https://vndb.org/r78712)脚本导入导出（未测试）
+
+### 2.2.0 (2023.12.3)
+- 支持CZ2的导入（未实际测试）
+
+### 2.1.0 (2023.11.28)
+- 支持CZ2的导出
 
 ### 2023.10.7
 - Supports LOOPERS import and export (tested)

@@ -3,10 +3,11 @@ package czimage
 import (
 	"bytes"
 	"encoding/binary"
-	"github.com/go-restruct/restruct"
 	"image"
 	"image/draw"
 	"io"
+
+	"github.com/go-restruct/restruct"
 )
 
 func FillImage(src image.Image, width, height int) (dst *image.NRGBA) {
@@ -16,10 +17,10 @@ func FillImage(src image.Image, width, height int) (dst *image.NRGBA) {
 }
 
 // GetOutputInfo 读取分块信息
-//  Description 读取分块信息
-//  Param data []byte
-//  Return outputInfo
 //
+//	Description 读取分块信息
+//	Param data []byte
+//	Return outputInfo
 func GetOutputInfo(data []byte) (outputInfo *CzOutputInfo) {
 	outputInfo = &CzOutputInfo{}
 	err := restruct.Unpack(data, binary.LittleEndian, outputInfo)
@@ -35,11 +36,11 @@ func GetOutputInfo(data []byte) (outputInfo *CzOutputInfo) {
 }
 
 // WriteStruct 写入结构体
-//  Description 写入结构体
-//  Param writer io.Writer
-//  Param list ...interface{}
-//  Return error
 //
+//	Description 写入结构体
+//	Param writer io.Writer
+//	Param list ...interface{}
+//	Return error
 func WriteStruct(writer io.Writer, list ...interface{}) error {
 	for _, v := range list {
 		temp, err := restruct.Pack(binary.LittleEndian, v)
@@ -52,11 +53,11 @@ func WriteStruct(writer io.Writer, list ...interface{}) error {
 }
 
 // Decompress 解压数据
-//  Description
-//  Param data []byte 压缩的数据
-//  Param outputInfo *CzOutputInfo 分块信息
-//  Return []byte
 //
+//	Description
+//	Param data []byte 压缩的数据
+//	Param outputInfo *CzOutputInfo 分块信息
+//	Return []byte
 func Decompress(data []byte, outputInfo *CzOutputInfo) []byte {
 	offset := 0
 
@@ -79,13 +80,37 @@ func Decompress(data []byte, outputInfo *CzOutputInfo) []byte {
 
 }
 
-// Compress 压缩数据
-//  Description 压缩数据
-//  Param data []byte 未压缩数据
-//  Param size int 分块大小
-//  Return compressed
-//  Return outputInfo
+// Decompress2 解压数据 CZ2专用
 //
+//	Description
+//	Param data []byte 压缩的数据
+//	Param outputInfo *CzOutputInfo 分块信息
+//	Return []byte
+func Decompress2(data []byte, outputInfo *CzOutputInfo) []byte {
+	offset := 0
+
+	outputBuf := &bytes.Buffer{}
+	for _, block := range outputInfo.BlockInfo {
+		offsetTemp := offset
+		offset += int(block.CompressedSize)
+		//_ = os.WriteFile(fmt.Sprintf("C:\\Users\\wetor\\Desktop\\Prototype\\CZ2\\32\\%d_asm.src.lzw", i),
+		//	data[offsetTemp:offset], 0666)
+		rawBuf := decompressLZW2(data[offsetTemp:offset], int(block.RawSize))
+		//_ = os.WriteFile(fmt.Sprintf("C:\\Users\\wetor\\Desktop\\Prototype\\CZ2\\32\\%d_asm.src.out", i),
+		//	rawBuf, 0666)
+		outputBuf.Write(rawBuf)
+	}
+	return outputBuf.Bytes()
+
+}
+
+// Compress 压缩数据
+//
+//	Description 压缩数据
+//	Param data []byte 未压缩数据
+//	Param size int 分块大小
+//	Return compressed
+//	Return outputInfo
 func Compress(data []byte, size int) (compressed []byte, outputInfo *CzOutputInfo) {
 
 	if size == 0 {
@@ -120,6 +145,45 @@ func Compress(data []byte, size int) (compressed []byte, outputInfo *CzOutputInf
 	}
 	outputInfo.TotalCompressedSize = outputBuf.Len() / 2
 
+	return outputBuf.Bytes(), outputInfo
+}
+
+// Compress2 压缩数据 CZ2专用
+//
+//	Description 压缩数据
+//	Param data []byte 未压缩数据
+//	Param size int 分块大小
+//	Return compressed
+//	Return outputInfo
+func Compress2(data []byte, size int) (compressed []byte, outputInfo *CzOutputInfo) {
+
+	if size == 0 {
+		size = 0x87BDF
+	}
+	var partData []byte
+	offset := 0
+	count := 0
+	last := ""
+	outputBuf := &bytes.Buffer{}
+	outputInfo = &CzOutputInfo{
+		TotalRawSize: len(data),
+		BlockInfo:    make([]CzBlockInfo, 0),
+	}
+	for {
+		count, partData, last = compressLZW2(data[offset:], size, last)
+		if count == 0 {
+			break
+		}
+		offset += count
+		outputBuf.Write(partData)
+
+		outputInfo.BlockInfo = append(outputInfo.BlockInfo, CzBlockInfo{
+			CompressedSize: uint32(len(partData)),
+			RawSize:        uint32(count),
+		})
+		outputInfo.FileCount++
+	}
+	outputInfo.TotalCompressedSize = outputBuf.Len()
 	return outputBuf.Bytes(), outputInfo
 }
 

@@ -9,16 +9,23 @@ import (
 	"github.com/golang/glog"
 )
 
-// Cz1Image
+type Cz2Header struct {
+	Unknown1 uint8
+	Unknown2 uint8
+	Unknown3 uint8
+}
+
+// Cz2Image
 //
 //	Description Cz1.Load() 载入并解压数据，转化成Image
-type Cz1Image struct {
+type Cz2Image struct {
 	CzHeader
+	Cz2Header
 	ColorPanel []color.NRGBA // []BGRA
 	CzData
 }
 
-func (cz *Cz1Image) Load(header CzHeader, data []byte) {
+func (cz *Cz2Image) Load(header CzHeader, data []byte) {
 	cz.CzHeader = header
 	cz.Raw = data
 
@@ -34,40 +41,27 @@ func (cz *Cz1Image) Load(header CzHeader, data []byte) {
 			}
 			offset += 4
 		}
-		glog.V(6).Infoln("cz1 colorPanel", len(cz.ColorPanel))
+		glog.V(6).Infoln("cz2 colorPanel", len(cz.ColorPanel))
 	}
+
 	cz.OutputInfo = GetOutputInfo(cz.Raw[offset:])
+	glog.V(6).Infoln(cz.OutputInfo)
 }
 
 // decompress
 //
 //	Description 解压数据
 //	Receiver cz *Cz1Image
-func (cz *Cz1Image) decompress() {
+func (cz *Cz2Image) decompress() {
 	pic := image.NewNRGBA(image.Rect(0, 0, int(cz.CzHeader.Width), int(cz.CzHeader.Heigth)))
 	offset := int(cz.HeaderLength)
 	if cz.Colorbits == 4 || cz.Colorbits == 8 {
 		offset += 1 << (cz.Colorbits + 2)
 	}
-	buf := Decompress(cz.Raw[offset+cz.OutputInfo.Offset:], cz.OutputInfo)
+	buf := Decompress2(cz.Raw[offset+cz.OutputInfo.Offset:], cz.OutputInfo)
 	glog.V(6).Infoln("uncompress size", len(buf))
-
+	//_ = os.WriteFile("C:\\Users\\wetor\\Desktop\\Prototype\\CZ2\\32\\明朝32.cz2.bin", buf, 0666)
 	switch cz.Colorbits {
-	case 4:
-		// TODO 未测试
-		i := 0
-		var index uint8
-		for y := 0; y < int(cz.CzHeader.Heigth); y++ {
-			for x := 0; x < int(cz.CzHeader.Width); x++ {
-				if i%2 == 0 {
-					index = buf[i/2] & 0x0F // low4bit
-				} else {
-					index = (buf[i/2] & 0xF0) >> 4 // high4bit
-				}
-				pic.SetNRGBA(x, y, cz.ColorPanel[index])
-				i++
-			}
-		}
 	case 8:
 		i := 0
 		for y := 0; y < int(cz.CzHeader.Heigth); y++ {
@@ -76,25 +70,6 @@ func (cz *Cz1Image) decompress() {
 				i++
 			}
 		}
-	case 24:
-		// TODO 未测试
-		// RGB
-		i := 0
-		for y := 0; y < int(cz.CzHeader.Heigth); y++ {
-			for x := 0; x < int(cz.CzHeader.Width); x++ {
-				pic.SetNRGBA(x, y, color.NRGBA{
-					R: buf[i+0],
-					G: buf[i+1],
-					B: buf[i+2],
-					A: 0xFF,
-				})
-				i += 3
-			}
-		}
-	case 32:
-		// TODO 未测试
-		// RGBA
-		pic.Pix = buf
 	}
 	cz.Image = pic
 }
@@ -104,7 +79,7 @@ func (cz *Cz1Image) decompress() {
 //	Description 取得解压后的图像数据
 //	Receiver cz *Cz1Image
 //	Return image.Image
-func (cz *Cz1Image) GetImage() image.Image {
+func (cz *Cz2Image) GetImage() image.Image {
 	if cz.Image == nil {
 		cz.decompress()
 	}
@@ -117,21 +92,14 @@ func (cz *Cz1Image) GetImage() image.Image {
 //	Receiver cz *Cz1Image
 //	Param w io.Writer
 //	Return error
-func (cz *Cz1Image) Export(w io.Writer) error {
+func (cz *Cz2Image) Export(w io.Writer) error {
 	if cz.Image == nil {
 		cz.decompress()
 	}
 	return png.Encode(w, cz.Image)
 }
 
-// Import
-//
-//	Description
-//	Receiver cz *Cz1Image
-//	Param r io.Reader
-//	Param fillSize bool 是否填充大小
-//	Return error
-func (cz *Cz1Image) Import(r io.Reader, fillSize bool) error {
+func (cz *Cz2Image) Import(r io.Reader, fillSize bool) error {
 	var err error
 	cz.PngImage, err = png.Decode(r)
 	if err != nil {
@@ -161,7 +129,7 @@ func (cz *Cz1Image) Import(r io.Reader, fillSize bool) error {
 	if len(cz.OutputInfo.BlockInfo) != 0 {
 		blockSize = int(cz.OutputInfo.BlockInfo[0].CompressedSize)
 	}
-	cz.Raw, cz.OutputInfo = Compress(data, blockSize)
+	cz.Raw, cz.OutputInfo = Compress2(data, blockSize)
 
 	cz.OutputInfo.TotalRawSize = 0
 	cz.OutputInfo.TotalCompressedSize = 0
@@ -170,14 +138,14 @@ func (cz *Cz1Image) Import(r io.Reader, fillSize bool) error {
 		cz.OutputInfo.TotalCompressedSize += int(block.CompressedSize)
 	}
 	cz.OutputInfo.Offset = 4 + int(cz.OutputInfo.FileCount)*8
-
+	glog.V(6).Infoln(cz.OutputInfo)
 	return nil
 }
 
-func (cz *Cz1Image) Write(w io.Writer) error {
+func (cz *Cz2Image) Write(w io.Writer) error {
 	var err error
 	glog.V(6).Infoln(cz.CzHeader)
-	err = WriteStruct(w, &cz.CzHeader, cz.ColorPanel, cz.OutputInfo)
+	err = WriteStruct(w, &cz.CzHeader, cz.Cz2Header, cz.ColorPanel, cz.OutputInfo)
 
 	if err != nil {
 		return err
